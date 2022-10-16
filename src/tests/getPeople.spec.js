@@ -1,17 +1,28 @@
-const { getPeople } = require("../getPeople");
-const { eventGenerator } = require("../utils/eventGenerator");
+
+const app = 'http://localhost:3000';
+const request = require("supertest");
 
 describe("GET / peoples", () => {
-    test("you must reply with the status code 200 and object if you are looking for a person by id", async () => {
-        const response = await getPeople(eventGenerator({ pathParameters: { id: 1 } }))
-        expect(response.statusCode).toBe(200)
-        expect(response.body).toBeInstanceOf(Object);
-    })
+
+    test("should respond with a 200 status code", async () => {
+        let id = 1;
+        const response = await request(app).get(`/peoples/${id}`).send();
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("should respond a json as a content type", async () => {
+        let id = 1;
+        const response = await request(app).get(`/peoples/${id}`).send();
+        expect(response.headers["content-type"]).toEqual(
+            expect.stringContaining("json")
+        );
+    });
+
 
     test("should respond with status code 500 if the id parameter passed as string", async () => {
-        const response = await getPeople(eventGenerator({ pathParameters: { id: "a" } }))
+        let id = "a";
+        const response = await request(app).get(`/peoples/${id}`).send();
         expect(response.statusCode).toBe(500)
-        expect(response.body).toBeInstanceOf(Object);
     })
 
 })  

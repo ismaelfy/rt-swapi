@@ -1,0 +1,13 @@
+{
+  "pathParameters": {
+    "id": "583a4160-44bb-4b82-b8b2-d2b1146e03df"
+  },
+  "queryStringParameters": {
+    "page": 2,
+    "search": ""
+  },
+  "headers": {
+    "host": "https://6lmsol2ndb.execute-api.us-east-1.amazonaws.com"
+  },
+  "rawPath": "/"
+}

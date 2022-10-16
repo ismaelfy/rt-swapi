@@ -13,10 +13,14 @@ const rules = {
 const createUser = async (event) => {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     let validation = new Validator(JSON.parse(event.body), rules);
+
     if (validation.fails()) {
         return {
-            statusCode: 500,
-            body: JSON.stringify(validation.errors.errors)
+            statusCode: 400,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ errors: validation.errors.errors })
         };
     }
 
@@ -26,6 +30,7 @@ const createUser = async (event) => {
     const id = v4();
 
     const salt = bcrypt.genSaltSync(10)
+    
     const newcontrasena = bcrypt.hashSync(contrasena, salt)
 
     const Item = {
@@ -48,12 +53,12 @@ const createUser = async (event) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Item })
+            body: JSON.stringify(Item)
         }
     } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify(error)
+            body: JSON.stringify({ error })
         }
     }
 }

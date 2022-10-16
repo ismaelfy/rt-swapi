@@ -8,10 +8,10 @@ const rules = {
 const getPeoples = async (event) => {
     let swapi_url = "https://swapi.py4e.com/api/people";
 
-    const queryParams = event.queryStringParameters;
+    const queryParams = event.queryStringParameters || {};
 
     let params = [];
-    if (typeof queryParams !== 'undefined' && typeof queryParams.page !== 'undefined') {
+    if (Object.keys(queryParams).length > 0 && typeof queryParams.page !== 'undefined') {
         let validation = new Validator(queryParams, rules);
         if (validation.fails()) {
             const errors = validation.errors.errors;
@@ -20,13 +20,13 @@ const getPeoples = async (event) => {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: { errors }
+                body: JSON.stringify({ errors })
             };
         }
         params.push("page=" + queryParams.page);
     }
 
-    if (typeof queryParams !== 'undefined' && typeof queryParams.search !== 'undefined') {
+    if (Object.keys(queryParams).length > 0 && typeof queryParams.search !== 'undefined') {
         let validation = new Validator(queryParams, rules);
         if (validation.fails()) {
             const errors = validation.errors.errors;
@@ -35,7 +35,7 @@ const getPeoples = async (event) => {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: { errors }
+                body: JSON.stringify({ errors })
             };
         }
         params.push("search=" + queryParams.search);
@@ -53,21 +53,22 @@ const getPeoples = async (event) => {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: { error }
+                body: JSON.stringify({ error })
             };
         })
-    
+    const data = {
+        cantidad: response.count,
+        siguiente: nextAndPreviousPage(event, response.next),
+        anterior: nextAndPreviousPage(event, response.previous),
+        data: response.results
+    };
+
     return {
         statusCode: 200,
         headers: {
             'Content-type': 'application/json'
         },
-        body: {
-            cantidad: response.count,
-            siguiente: nextAndPreviousPage(event, response.next),
-            anterior: nextAndPreviousPage(event, response.previous),
-            data: response.results
-        }
+        body: JSON.stringify(data)
     }
 
 }

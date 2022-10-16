@@ -13,7 +13,7 @@ const getUser = async (event) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: { error: errors }
+            body: JSON.stringify({ errors })
         };
     }
 
@@ -31,7 +31,7 @@ const getUser = async (event) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ user })
+            body: JSON.stringify(user)
         }
     } catch (error) {
         return {
@@ -39,7 +39,7 @@ const getUser = async (event) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ catch: error })
+            body: JSON.stringify({ error })
         }
     }
 

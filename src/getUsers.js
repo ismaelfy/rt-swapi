@@ -10,12 +10,18 @@ const getUsers = async (event) => {
         const users = result.Items;
         return {
             statusCode: 200,
-            body: JSON.stringify({ users })
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(users)
         }
 
     } catch (error) {
         return {
             statusCode: 500,
+            headers: {
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify({ error })
         };
     }

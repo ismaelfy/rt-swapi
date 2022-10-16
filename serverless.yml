@@ -71,3 +71,6 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+
+plugins:
+  - serverless-offline
