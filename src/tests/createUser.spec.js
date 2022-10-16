@@ -2,7 +2,7 @@ const app = 'http://localhost:3000';
 const request = require('supertest');
 
 describe('POST / users', () => {
-    describe("given a nombre, appellidos, correo y contraseña", () => {
+    describe("given a nombre, appellidos, correo y contrasena", () => {
         const userData = {
             nombre: "Ismael",
             apellidos: "Fernandez",
@@ -10,13 +10,11 @@ describe('POST / users', () => {
             contrasena: "12345sd"
         }
 
-        // should respond with a 200 code
         test("should respond with a 200 status code", async () => {
             const response = await request(app).post("/users").send(userData);
             expect(response.statusCode).toBe(200);
         });
 
-        // should respond a json as a content type
         test("should have a Content-Type: application/json header", async () => {
             const response = await request(app).post("/users").send(userData);
             expect(response.headers["content-type"]).toEqual(
@@ -24,7 +22,6 @@ describe('POST / users', () => {
             );
         });
 
-        // shoud respond with a json object containing the new task with an id
         test("should respond with an user ID", async () => {
             const response = await request(app).post("/users").send(userData);
             expect(response.body.id).toBeDefined();
