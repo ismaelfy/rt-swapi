@@ -1,6 +1,6 @@
 {
-  "scripts":{
-    "test": "NODE_OPTIONS=--experimentall-"
+  "scripts": {
+    "test": "jest"
   },
   "dependencies": {
     "aws-sdk": "^2.1233.0",
@@ -10,5 +10,9 @@
     "validate.js": "^0.13.1",
     "validator": "^13.7.0",
     "validatorjs": "^3.22.1"
+  },
+  "devDependencies": {
+    "jest": "^29.2.0",
+    "supertest": "^6.3.0"
   }
 }

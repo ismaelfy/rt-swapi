@@ -8,12 +8,18 @@ const rules = {
 
 const getPeople = async (event) => {
     let swapi_url = "https://swapi.py4e.com/api/people/";
+    
     const { id } = event.pathParameters;
+
     let validation = new Validator(event.pathParameters, rules);
     if (validation.fails()) {
+        const errors = validation.errors.errors;
         return {
             statusCode: 500,
-            body: JSON.stringify(validation.errors.errors)
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: { errors }
         };
     }
 
@@ -23,14 +29,20 @@ const getPeople = async (event) => {
         .catch((error) => {
             return {
                 statusCode: 400,
-                error: JSON.stringify(error)
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: {error}
             };
         })
 
     const people = FormatPeopleData(response);
 
     return {
-        status: response.status,
+        statusCode: 200,
+        headers: {
+            'Content-type': 'application/json'
+        },
         body: people
     };
 

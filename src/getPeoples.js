@@ -5,7 +5,6 @@ const rules = {
     page: 'numeric',
     search: 'string'
 }
-
 const getPeoples = async (event) => {
     let swapi_url = "https://swapi.py4e.com/api/people";
 
@@ -13,27 +12,35 @@ const getPeoples = async (event) => {
 
     let params = [];
     if (typeof queryParams !== 'undefined' && typeof queryParams.page !== 'undefined') {
-        let validation = new Validator(queryParams.page, rules);
+        let validation = new Validator(queryParams, rules);
         if (validation.fails()) {
+            const errors = validation.errors.errors;
             return {
                 statusCode: 500,
-                body: JSON.stringify(validation.errors.errors)
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: { errors }
             };
         }
         params.push("page=" + queryParams.page);
     }
 
     if (typeof queryParams !== 'undefined' && typeof queryParams.search !== 'undefined') {
-        let validation = new Validator(queryParams.search, rules);
+        let validation = new Validator(queryParams, rules);
         if (validation.fails()) {
+            const errors = validation.errors.errors;
             return {
                 statusCode: 500,
-                body: JSON.stringify(validation.errors.errors)
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: { errors }
             };
         }
         params.push("search=" + queryParams.search);
     }
-    
+
     if (params.length > 0) {
         swapi_url = `${swapi_url}?${params.join("&")}`;
     }
@@ -42,20 +49,27 @@ const getPeoples = async (event) => {
         .then(({ data }) => data)
         .catch((error) => {
             return {
-                status: 400,
-                error: JSON.stringify(error)
+                statusCode: 400,
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: { error }
             };
         })
-    const res = {
-        status: response.status,
+    
+    return {
+        statusCode: 200,
+        headers: {
+            'Content-type': 'application/json'
+        },
         body: {
             cantidad: response.count,
             siguiente: nextAndPreviousPage(event, response.next),
             anterior: nextAndPreviousPage(event, response.previous),
             data: response.results
         }
-    };
-    return res;
+    }
+
 }
 
 const nextAndPreviousPage = ({ headers, rawPath }, url) => {
